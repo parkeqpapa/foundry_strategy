@@ -1,3 +1,5 @@
+pragma solidity ^0.8.10;
+
 interface RewardsController {
     event Accrue(
         address indexed market,
