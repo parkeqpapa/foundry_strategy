@@ -89,7 +89,6 @@ contract Strategy is BaseStrategy {
                     address(this)
                 );
             }
-            uint256 withdrawnBal = wantBalance();
             _debtPayment = Math.min(stakedBal, _debtOutstanding);
         }
         uint256 assets = estimatedTotalAssets();
@@ -111,7 +110,7 @@ contract Strategy is BaseStrategy {
         // TODO: Do something to invest excess `want` tokens (from the Vault) into your positions
         // NOTE: Try to adjust positions so that `_debtOutstanding` can be freed up on *next* harvest (not immediately)
         uint256 _wantBal = wantBalance();
-        if (_wantBal > 0) {
+        if (_wantBal > _debtOutstanding) {
             exactly.deposit(_wantBal, address(this));
         }
     }
@@ -160,6 +159,12 @@ contract Strategy is BaseStrategy {
         if (_exactlyBal > 0) {
             exactly.redeem(_exactlyBal, address(this), address(this));
         }
+        rewardsController.claimAll(address(this));
+        op.safeTransfer(address(_newStrategy), op.balanceOf(address(this)));
+        want.safeTransfer(
+            address(_newStrategy),
+            want.balanceOf(address(this))
+        );
     }
 
     function _sellRewards() internal {
