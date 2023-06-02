@@ -2,8 +2,8 @@
 pragma solidity ^0.8.12;
 import "forge-std/console.sol";
 
-import {StrategyFixture} from "./utils/StrategyFixture.sol";
-import {StrategyParams} from "../interfaces/Vault.sol";
+import { StrategyFixture } from "./utils/StrategyFixture.sol";
+import { StrategyParams } from "../interfaces/Vault.sol";
 
 contract StrategyOperationsTest is StrategyFixture {
     // setup is run on before each test
@@ -104,9 +104,10 @@ contract StrategyOperationsTest is StrategyFixture {
         skip(6 hours);
 
         // TODO: Uncomment the lines below
-        // uint256 profit = want.balanceOf(address(vault));
-        // assertGt(want.balanceOf(address(strategy)) + profit, _amount);
-        // assertGt(vault.pricePerShare(), beforePps)
+        uint256 profit = want.balanceOf(address(vault));
+        assertGt(strategy.estimatedTotalAssets() + profit, _amount);
+        assertGe(vault.pricePerShare(), beforePps);
+        assertGt(profit, 0);
     }
 
     function testChangeDebt(uint256 _amount) public {
@@ -135,12 +136,12 @@ contract StrategyOperationsTest is StrategyFixture {
 
         // In order to pass these tests, you will need to implement prepareReturn.
         // TODO: uncomment the following lines.
-        // vm.prank(gov);
-        // vault.updateStrategyDebtRatio(address(strategy), 5_000);
-        // skip(1);
-        // vm.prank(strategist);
-        // strategy.harvest();
-        // assertRelApproxEq(strategy.estimatedTotalAssets(), half, DELTA);
+        vm.prank(gov);
+        vault.updateStrategyDebtRatio(address(strategy), 5_000);
+        skip(1);
+        vm.prank(strategist);
+        strategy.harvest();
+        assertRelApproxEq(strategy.estimatedTotalAssets(), half, DELTA);
     }
 
     function testProfitableHarvestOnDebtChange(uint256 _amount) public {
@@ -169,30 +170,21 @@ contract StrategyOperationsTest is StrategyFixture {
 
         // In order to pass these tests, you will need to implement prepareReturn.
         // TODO: uncomment the following lines.
-        /*
+
         // Harvest 2: Realize profit
         skip(1);
         vm.prank(strategist);
         strategy.harvest();
         //Make sure we have updated the debt ratio of the strategy
-        assertRelApproxEq(
-            strategy.estimatedTotalAssets(), 
-            _amount / 2, 
-            DELTA
-        );
+        assertRelApproxEq(strategy.estimatedTotalAssets(), _amount / 2, DELTA);
         skip(6 hours);
 
         //Make sure we have updated the debt and made a profit
         uint256 vaultBalance = want.balanceOf(address(vault));
         StrategyParams memory params = vault.strategies(address(strategy));
         //Make sure we got back profit + half the deposit
-        assertRelApproxEq(
-            _amount / 2 + params.totalGain, 
-            vaultBalance, 
-            DELTA
-        );
+        assertRelApproxEq(_amount / 2 + params.totalGain, vaultBalance, DELTA);
         assertGe(vault.pricePerShare(), beforePps);
-        */
     }
 
     function testSweep(uint256 _amount) public {

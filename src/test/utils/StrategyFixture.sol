@@ -2,14 +2,14 @@
 pragma solidity ^0.8.12;
 pragma abicoder v2;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {ExtendedTest} from "./ExtendedTest.sol";
-import {Vm} from "forge-std/Vm.sol";
-import {IVault} from "../../interfaces/Vault.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { ExtendedTest } from "./ExtendedTest.sol";
+import { Vm } from "forge-std/Vm.sol";
+import { IVault } from "../../interfaces/Vault.sol";
 
 // NOTE: if the name of the strat or file changes this needs to be updated
-import {Strategy} from "../../Strategy.sol";
+import { Strategy } from "../../Strategy.sol";
 
 // Artifact paths for deploying from the deps folder, assumes that the command is run from
 // the project root.
@@ -40,20 +40,20 @@ contract StrategyFixture is ExtendedTest {
     // @dev maximum amount of want tokens deposited based on @maxDollarNotional
     uint256 public maxFuzzAmt;
     // @dev maximum dollar amount of tokens to be deposited
-    uint256 public maxDollarNotional = 1_000_000;
+    uint256 public maxDollarNotional = 250_000;
     // @dev maximum dollar amount of tokens for single large amount
-    uint256 public bigDollarNotional = 49_000_000;
+    uint256 public bigDollarNotional = 100_000;
     // @dev used for non-fuzz tests to test large amounts
     uint256 public bigAmount;
     // Used for integer approximation
-    uint256 public constant DELTA = 10**5;
+    uint256 public constant DELTA = 10 ** 1;
 
     function setUp() public virtual {
         _setTokenPrices();
         _setTokenAddrs();
 
         // Choose a token from the tokenAddrs mapping, see _setTokenAddrs for options
-        string memory token = "DAI";
+        string memory token = "USDC";
         weth = IERC20(tokenAddrs["WETH"]);
         want = IERC20(tokenAddrs[token]);
 
@@ -71,13 +71,13 @@ contract StrategyFixture is ExtendedTest {
         vault = IVault(_vault);
         strategy = Strategy(_strategy);
 
-        minFuzzAmt = 10**vault.decimals() / 10;
+        minFuzzAmt = 10 ** vault.decimals() * 10000; // USDC 6 decimals
         maxFuzzAmt =
             uint256(maxDollarNotional / tokenPrices[token]) *
-            10**vault.decimals();
+            10 ** vault.decimals();
         bigAmount =
             uint256(bigDollarNotional / tokenPrices[token]) *
-            10**vault.decimals();
+            10 ** vault.decimals();
 
         // add more labels to make your traces readable
         vm.label(address(vault), "Vault");
@@ -170,20 +170,18 @@ contract StrategyFixture is ExtendedTest {
     }
 
     function _setTokenAddrs() internal {
-        tokenAddrs["WBTC"] = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
-        tokenAddrs["YFI"] = 0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e;
-        tokenAddrs["WETH"] = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-        tokenAddrs["LINK"] = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
-        tokenAddrs["USDT"] = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
-        tokenAddrs["DAI"] = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-        tokenAddrs["USDC"] = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+        tokenAddrs["WBTC"] = 0x68f180fcCe6836688e9084f035309E29Bf0A2095;
+        tokenAddrs["WETH"] = 0x4200000000000000000000000000000000000006;
+        tokenAddrs["LINK"] = 0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6;
+        tokenAddrs["USDT"] = 0x94b008aA00579c1307B0EF2c499aD98a8ce58e58;
+        tokenAddrs["DAI"] = 0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1;
+        tokenAddrs["USDC"] = 0x7F5c764cBc14f9669B88837ca1490cCa17c31607;
     }
 
     function _setTokenPrices() internal {
-        tokenPrices["WBTC"] = 60_000;
-        tokenPrices["WETH"] = 4_000;
-        tokenPrices["LINK"] = 20;
-        tokenPrices["YFI"] = 35_000;
+        tokenPrices["WBTC"] = 26_400;
+        tokenPrices["WETH"] = 1_800;
+        tokenPrices["LINK"] = 6;
         tokenPrices["USDT"] = 1;
         tokenPrices["USDC"] = 1;
         tokenPrices["DAI"] = 1;
