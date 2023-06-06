@@ -96,7 +96,7 @@ contract StrategyOperationsTest is StrategyFixture {
         assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
 
         // TODO: Add some code before harvest #2 to simulate earning yield
-
+        deal(address(want), address(strategy), _amount / 200);
         // Harvest 2: Realize profit
         skip(1);
         vm.prank(strategist);
@@ -106,7 +106,7 @@ contract StrategyOperationsTest is StrategyFixture {
         // TODO: Uncomment the lines below
         uint256 profit = want.balanceOf(address(vault));
         assertGt(strategy.estimatedTotalAssets() + profit, _amount);
-        assertGe(vault.pricePerShare(), beforePps);
+        assertGt(vault.pricePerShare(), beforePps);
         assertGt(profit, 0);
     }
 
@@ -164,6 +164,7 @@ contract StrategyOperationsTest is StrategyFixture {
         assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
 
         // TODO: Add some code before harvest #2 to simulate earning yield
+        deal(address(want), address(strategy), _amount / 200);
 
         vm.prank(gov);
         vault.updateStrategyDebtRatio(address(strategy), 5_000);
