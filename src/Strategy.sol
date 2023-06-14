@@ -87,7 +87,7 @@ contract Strategy is BaseStrategy {
             _profit = assets.sub(debt);
             uint256 _wantBal = wantBalance();
             if (_profit.add(_debtPayment) > _wantBal) {
-                liquidateAllPositions();
+                liquidatePosition(_profit.add(_debtPayment));
             }
         } else {
             _loss = debt.sub(assets);
