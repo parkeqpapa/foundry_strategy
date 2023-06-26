@@ -1,0 +1,104 @@
+# Protocol Due Diligence: [Exactly]
+
+## Overview + Links
+
+- **Website**: https://exact.ly
+- **Team**: https://github.com/orgs/exactly/people
+- **Social**: https://twitter.com/exactlyprotocol
+- **Docs**: https://docs.exact.ly
+- **Others**: https://github.com/exactly
+- **Audits**: https://docs.exact.ly/security/audits
+- **Dashboards**: https://dune.com/exactly/exactly
+#
+## Audits and Due Diligence Disclosures
+
+- **ABDK**: https://github.com/exactly/audits/blob/main/ABDK%201st%20audit%20(Oct-22).pdf
+
+- **ABDK**: https://github.com/exactly/audits/blob/main/ABDK%202nd%20audit%20(May-23).pdf
+
+- **ChainSafe**: https://github.com/exactly/audits/blob/main/Chainsafe%201st%20audit%20(May-22).pdf
+
+- **ChainSafe**: https://github.com/exactly/audits/blob/main/Chainsafe%202nd%20audit%20(Oct-22).pdf
+
+- **Coinspect**:  https://github.com/exactly/audits/blob/main/Coinspect%201st%20audit%20(Nov-21).pdf
+
+- **Coinspect**:  https://github.com/exactly/audits/blob/main/Coinspect%202nd%20audit%20(May-22).pdf
+
+- **Coinspect**:  https://github.com/exactly/audits/blob/main/Coinspect%203rd%20audit%20(Oct-22).pdf
+
+- **Coinspect**:  https://github.com/exactly/audits/blob/main/Coinspect%204th%20audit%20(Oct-22).pdf
+
+- **Coinspect**: https://github.com/exactly/audits/blob/main/Coinspect%205th%20audit%20(Mar-23).pdf
+
+- **Coinspect**: https://github.com/exactly/audits/blob/main/Coinspect%20RewardsController%201st%20audit%20(Jan-23).pdf
+
+- **Coinspect**: https://github.com/exactly/audits/blob/main/Coinspect%20RewardsController%202nd%20audit%20(Feb-23).pdf
+
+- **Coinspect**: https://github.com/exactly/audits/blob/main/Coinspect%20RewardsController%203rd%20audit%20(Mar-23).pdf
+
+- **Cryptecon**: https://github.com/exactly/audits/blob/main/Cryptecon_Economics_of_the_Exactly_Protocol(Sep-22).pdf
+
+#
+## Funds Management
+
+- Exactly does not delegate funds to another protocol.
+
+## Rug-ability
+
+**Multi-sig:**
+The multisig has a timelock in order to communicate and give time to the users using the protocol to react to any change made by the Risk Management Committee.
+
+Exactly began with centralized governance of the protocol’s parameters in order to get product market fit and will transition to a complete decentralization over time where the Risk Management Committee multisig will be replaced by a Decentralized Autonomous Organization (DAO) and EXA tokens will be minted to the community.
+
+
+**Upgradable Contracts:**
+The following contracts are upgradeable and can be changed by the TimelockController:
+
+**Auditor**: https://docs.exact.ly/guides/protocol/auditor
+
+**Market**: https://docs.exact.ly/guides/protocol/market
+
+
+### Bug Bounty program
+Exactly Protocol partnered with Immunefi to offer a Bug Bounty Program to incentivize security researchers to find vulnerabilities in our protocol, rewarding individuals who can identify and report security flaws.
+Rewards are distributed according to the impact of the vulnerability based on the Immunefi Vulnerability Severity Classification System V2.2. This is a simplified 5-level scale, with separate scales for websites/apps, smart contracts, and blockchains/DLTs, focusing on the impact of the vulnerability reported.
+You can access the program at the following link: https://immunefi.com/bounty/exactly/.
+
+
+# Path to Prod
+
+## Strategy Details
+
+- **Description:** Deposits USDC to Exactly Variable Rate Pool, earns fees and OP tokens rewards, sells OP for more USDC and deposits again.
+- **Strategy current APR:** 2.19% on USDC and 2,10% on OP 
+- **Does Strategy delegate assets?:** No.
+- **Target Prod Vault:** 0.4.5
+- **BaseStrategy Version #:** 0.4.5
+
+
+
+
+## Testing Plan
+
+### Ape.tax
+
+- **Will Ape.tax be used?:** Yes
+- **Will Ape.tax vault be same version # as prod vault?:** Yes
+- **What conditions are needed to graduate? (e.g. number of harvest cycles, min funds, etc):** Be profitable.
+
+## Prod Deployment Plan
+
+- **Suggested position in withdrawQueue?:**
+- **Does strategy have any deposit/withdraw fees?:** No.
+- **Suggested debtRatio?:** start with 5 - 10%
+- **Suggested max debtRatio to scale to?:** should be analized.
+
+
+
+## Emergency Plan
+
+- **Shutdown Plan:** withdraw from exactly, claim and sell rewards, return want to vault
+- **Is it safe to...**
+  - call EmergencyShutdown
+  - remove from withdrawQueue
+  - call revoke and then harvest
